@@ -354,7 +354,7 @@ function generateUitQuestion2Answer() {
     if (!connected) {
         eulerConclusion = "Vì đồ thị không liên thông nên đồ thị không có chu trình hay đường đi Euler.";
     } else if (oddNodes.length === 0) {
-        eulerConclusion = `Vì đồ thị liên thông và mọi đỉnh đều có bậc chẵn (đều chia hết cho 2) nên đồ thị CÓ chu trình Euler.`;
+        eulerConclusion = `Vì đồ thị liên thông và mọi đỉnh đều có bậc chẵn nên đồ thị CÓ chu trình Euler.`;
     } else if (oddNodes.length === 2) {
         eulerConclusion = `Vì đồ thị liên thông và có đúng 2 đỉnh bậc lẻ (${oddNodes.join(', ')}) nên đồ thị CÓ đường đi Euler (không có chu trình Euler).`;
     } else {

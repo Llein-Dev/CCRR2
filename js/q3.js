@@ -115,7 +115,7 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
         eulerConclusion = "Vì đồ thị không liên thông nên đồ thị KHÔNG có chu trình Euler và KHÔNG có đường đi Euler.";
         eulerConclusionHTML = `Vì đồ thị không liên thông nên đồ thị <strong style="color:var(--accent-red)">KHÔNG có chu trình Euler</strong> và <strong style="color:var(--accent-red)">KHÔNG có đường đi Euler</strong>.`;
     } else if (oddNodes.length === 0) {
-        eulerConclusion = "Vì đồ thị liên thông và mọi đỉnh đều có bậc chẵn (đều chia hết cho 2) nên đồ thị CÓ chu trình Euler.";
+        eulerConclusion = "Vì đồ thị liên thông và mọi đỉnh đều có bậc chẵn nên đồ thị CÓ chu trình Euler.";
         eulerConclusionHTML = `Vì đồ thị liên thông và mọi đỉnh đều có bậc chẵn nên đồ thị <strong style="color:var(--accent-green)">CÓ chu trình Euler</strong>.`;
     } else if (oddNodes.length === 2) {
         eulerConclusion = `Vì đồ thị liên thông và có đúng 2 đỉnh bậc lẻ (${oddNodes.join(', ')}) nên đồ thị CÓ đường đi Euler (không có chu trình Euler).`;
@@ -192,7 +192,7 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
     }
 
     steps.push({
-        S: "$\\\\emptyset$",
+        S: "$\\emptyset$",
         S_raw: "Ø",
         dists: getStepState(),
         selectedNode: startId
@@ -233,7 +233,7 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
         });
 
         if (visited.size < n) {
-            let S_latex = `\\\\{ ` + visitedList.join(', ') + ` \\\\}`;
+            let S_latex = `\\{ ` + visitedList.join(', ') + ` \\}`;
             let S_raw = "{" + visitedList.join(', ') + "}";
             steps.push({
                 S: S_latex,
@@ -256,10 +256,10 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
         rowCells.push(idx === 0 ? "Khởi tạo" : `${idx}`);
         
         if (idx === 0) {
-            rowCells.push("$\\\\emptyset$");
+            rowCells.push("$\\emptyset$");
         } else {
             let visitedSlice = visitedList.slice(0, idx).map(n => n.toLowerCase());
-            rowCells.push(`$\\\\{ ${visitedSlice.join(', ')} \\\\}$`);
+            rowCells.push(`$\\{ ${visitedSlice.join(', ')} \\}$`);
         }
 
         sortedNodes.forEach(node => {
@@ -280,7 +280,7 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
 
                 let cellStr = "";
                 if (dVal === Infinity) {
-                    cellStr = `\\\\infty, ${pVal ? pVal.toLowerCase() : startId.toLowerCase()}`;
+                    cellStr = `\\infty, ${pVal ? pVal.toLowerCase() : startId.toLowerCase()}`;
                 } else {
                     cellStr = `${dVal}, ${pVal ? pVal.toLowerCase() : startId.toLowerCase()}`;
                 }
@@ -312,9 +312,9 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
                 path.unshift(curr);
                 curr = prev[curr];
             }
-            pathStr = `$${path.map(n => n.toLowerCase()).join(' \\\\to ')}$`;
+            pathStr = `$${path.map(n => n.toLowerCase()).join(' \\to ')}$`;
         }
-        let distStr = dVal === Infinity ? "$\\\\infty$" : `${dVal}`;
+        let distStr = dVal === Infinity ? "$\\infty$" : `${dVal}`;
         conclusionTableLines.push(`| **${destNode.id}** | ${distStr} | ${pathStr} |`);
     });
 
@@ -402,8 +402,7 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
 
     let q3cMarkdown = `**c) Tìm đường đi ngắn nhất từ đỉnh \`${startId.toLowerCase()}\` (Thuật toán Dijkstra):**\n\n`;
     q3cMarkdown += `*   **Bảng các bước lặp thuật toán:**\n\n${dijkstraTableLines.join("\n")}\n\n`;
-    q3cMarkdown += `*(Quy tắc: Cột đầu tiên là bước lặp. Tập S chứa các đỉnh đã chọn ở các bước trước. Đánh dấu (*) tại đỉnh có khoảng cách nhỏ nhất được chọn ở bước hiện tại, và chuyển thành (-) ở dòng tiếp theo).*\n\n`;
-    q3cMarkdown += `*   **Bảng kết luận đường đi (Bắt buộc phải kẻ):**\n\nĐường đi ngắn nhất từ đỉnh \`${startId.toLowerCase()}\` là:\n\n${conclusionTableLines.join("\n")}\n`;
+    q3cMarkdown += `*   **Bảng kết luận đường đi:**\n\nĐường đi ngắn nhất từ đỉnh \`${startId.toLowerCase()}\` là:\n\n${conclusionTableLines.join("\n")}\n`;
 
     let q3cHTML = `
         <p><strong>c) Tìm đường đi ngắn nhất từ đỉnh <span style="font-family:'Times New Roman', serif; font-style:italic; font-weight:bold;">${startId.toLowerCase()}</span> (Thuật toán Dijkstra):</strong></p>
@@ -411,11 +410,8 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
         <div style="overflow-x: auto;">
             ${htmlDijkstraStepTable}
         </div>
-        <p style="font-size: 0.85rem; color: var(--muted); font-style: italic; margin-top: 0.5rem; line-height: 1.4; margin-bottom: 1.5rem;">
-            (Quy tắc: Cột đầu tiên là bước lặp. Tập S chứa các đỉnh đã chọn ở các bước trước. Đánh dấu (*) tại đỉnh có khoảng cách nhỏ nhất được chọn ở bước hiện tại, và chuyển thành (-) ở dòng tiếp theo).
-        </p>
         
-        <p><strong>* Bảng kết luận đường đi (Bắt buộc phải kẻ):</strong></p>
+        <p><strong>* Bảng kết luận đường đi:</strong></p>
         <p style="margin-top: 0.5rem;">Đường đi ngắn nhất từ đỉnh <strong>${startId.toLowerCase()}</strong> là:</p>
         <div style="overflow-x: auto;">
             ${htmlDijkstraConclusionTable}
@@ -527,44 +523,29 @@ function generateUitQuestion3AnswerSheet(startId, isMinKruskal) {
         ? "*(Ghi chú: Lấy cạnh sắp xếp từ BÉ lên LỚN)*"
         : "*(Ghi chú: Lấy cạnh sắp xếp từ LỚN xuống BÉ)*";
 
-    let q3dMarkdown = `**d) Tìm ${kruskalTitle} (Thuật toán Kruskal):**
-${kruskalSortNote}
-
-*   **Bảng sắp xếp và chọn cạnh:**
-
-${kruskalTableLines.join("\n")}
-
-*(Dừng kẻ bảng vì số cạnh "Chọn" = ${n - 1} = Tổng số đỉnh trừ đi 1. Các cạnh còn lại không xét nữa vì sẽ tạo chu trình).*
-
-*   **Kết luận và Vẽ hình:**
-    Tổng trọng số của ${kruskalTitle} là:
-    $T = ${totalWeightFormula} = ${totalWeight}$
-
-    *(Cầm bút lên và vẽ lại một đồ thị mới. Trên đồ thị đó CHỈ VẼ ${n - 1} ĐOẠN THẲNG có chữ "Chọn" ở bảng trên. Các đoạn thẳng khác không được phép vẽ).*
-    Các cạnh của cây khung gồm: ${mstEdgeStrings}`;
+    let q3dMarkdown = `**d) Tìm ${kruskalTitle} (Thuật toán Kruskal):**\n\n`;
+    q3dMarkdown += `*   **Bảng sắp xếp và chọn cạnh:**\n\n${kruskalTableLines.join("\n")}\n\n`;
+    q3dMarkdown += `*   **Kết luận:**\n`;
+    q3dMarkdown += `    Tổng trọng số của ${kruskalTitle} là:\n`;
+    q3dMarkdown += `    $T = ${totalWeightFormula} = ${totalWeight}$\n\n`;
+    q3dMarkdown += `    Các cạnh của cây khung gồm: ${mstEdgeStrings}`;
 
     let q3dHTML = `
         <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 2rem 0;">
         <p><strong>d) Tìm ${kruskalTitle} (Thuật toán Kruskal):</strong></p>
-        <p style="font-size: 0.85rem; color: var(--accent-purple); font-style: italic; margin-bottom: 0.5rem; font-weight: 600;">${isMinKruskal ? '(Ghi chú: Lấy cạnh sắp xếp từ BÉ lên LỚN)' : '(Ghi chú: Lấy cạnh sắp xếp từ LỚN xuống BÉ)'}</p>
         <p style="margin-top: 0.5rem;"><strong>* Bảng sắp xếp và chọn cạnh:</strong></p>
         <div style="overflow-x: auto;">
             ${htmlKruskalStepTable}
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-top: 0.5rem; line-height: 1.4; margin-bottom: 1.5rem;">
-            (Dừng kẻ bảng vì số cạnh "Chọn" = ${n - 1} = Tổng số đỉnh trừ đi 1. Các cạnh còn lại không xét nữa vì sẽ tạo chu trình).
-        </p>
         
-        <p><strong>* Kết luận và Vẽ hình:</strong></p>
+        <p><strong>* Kết luận:</strong></p>
         <ul style="padding-left: 1.5rem; line-height: 1.6;">
             <li style="margin-bottom: 0.5rem;">Tổng trọng số của ${kruskalTitle} là:<br>
                 <span style="font-family: 'Times New Roman', Times, serif; font-size: 1.15rem; font-weight: bold; color: var(--accent-green); background: rgba(74, 222, 128, 0.05); padding: 0.25rem 0.5rem; border-radius: 0.25rem; display: inline-block; margin-top: 0.25rem;">
                     T = ${totalWeightFormula} = ${totalWeight}
                 </span>
             </li>
-            <li><em>(Cầm bút lên và vẽ lại một đồ thị mới. Trên đồ thị đó <strong>CHỈ VẼ ${n - 1} ĐOẠN THẲNG</strong> có chữ "Chọn" ở bảng trên. Các đoạn thẳng khác không được phép vẽ).</em><br>
-                <span style="color: var(--muted); font-size: 0.9rem;">Các cạnh cây khung T: ${mstEdgeStrings}</span>
-            </li>
+            <li><span style="font-weight: bold; color: var(--accent-blue);">Các cạnh của cây khung gồm:</span> ${mstEdgeStrings}</li>
         </ul>
     `;
 

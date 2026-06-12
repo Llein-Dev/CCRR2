@@ -233,58 +233,13 @@ function generateKarnaughMapHTML(activeMintermsSet) {
 }
 
 function generateCircuitDescription(coverLaTex, circuitSVG) {
-    let descMarkdown = `\n\n**c) Vẽ sơ đồ mạch logic:**\n`;
-    descMarkdown += `*   **Mô tả chi tiết cách vẽ:**\n`;
-    descMarkdown += `    - Kéo 4 đường tín hiệu thẳng đứng đại diện cho các biến $x, y, z, t$. Sử dụng thêm các cổng NOT để tạo các nhánh $\\overline{x}, \\overline{y}, \\overline{z}, \\overline{t}$ (nếu có).\n`;
-    descMarkdown += `    - Dùng các cổng AND (hình chữ D) để gom các cụm tích hội (nhân logic) của các từ tối tiểu:\n`;
-    
-    coverLaTex.forEach((term, idx) => {
-        let literals = [];
-        let matches = term.match(/\\overline\{[a-z]\}|[a-z]/g) || [];
-        matches.forEach(m => {
-            if (m.startsWith('\\overline')) {
-                let char = m.charAt(10);
-                literals.push(`$\\overline{${char}}$`);
-            } else {
-                literals.push(`$${m}$`);
-            }
-        });
-        descMarkdown += `      + **Cổng AND thứ ${idx + 1}**: Gom các đầu vào ${literals.join(', ')} để xuất ra cụm $${term}$.\n`;
-    });
-    
-    descMarkdown += `    - Gom đầu ra của các cổng AND trên vào ngõ vào của 1 cổng OR lớn (hình cái khiên) để xuất ra hàm $f = ${coverLaTex.join(' \\lor ')}$.\n`;
-    descMarkdown += `*   **Sơ đồ mạch logic f:**\n\n${circuitSVG}`;
+    let descMarkdown = `\n\n**c) Vẽ sơ đồ mạch logic:**\n${circuitSVG}`;
     return descMarkdown;
 }
 
 function generateCircuitDescriptionHTML(coverLaTex, circuitSVG) {
     let html = `<p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>c) Vẽ sơ đồ mạch logic:</strong></p>`;
-    html += `<ul style="padding-left: 1.5rem; margin-bottom: 1rem;">`;
-    html += `<li style="margin-bottom: 0.5rem;"><strong>Mô tả chi tiết cách vẽ:</strong>`;
-    html += `<ul style="padding-left: 1.5rem; margin-top: 0.25rem;">`;
-    html += `<li style="margin-bottom: 0.25rem;">Kéo 4 đường tín hiệu thẳng đứng đại diện cho các biến <span style="font-style: italic;">x, y, z, t</span>. Dùng cổng NOT (tam giác có vòng tròn) tạo các nhánh <span style="text-decoration: overline;">x</span>, <span style="text-decoration: overline;">y</span>, <span style="text-decoration: overline;">z</span>, <span style="text-decoration: overline;">t</span>.</li>`;
-    html += `<li style="margin-bottom: 0.25rem;">Sử dụng cổng AND (hình chữ D) để gom các cụm:`;
-    html += `<ul style="padding-left: 1.5rem; margin-top: 0.25rem;">`;
-    
-    coverLaTex.forEach((term, idx) => {
-        let literals = [];
-        let matches = term.match(/\\overline\{[a-z]\}|[a-z]/g) || [];
-        matches.forEach(m => {
-            if (m.startsWith('\\overline')) {
-                let char = m.charAt(10);
-                literals.push(`<span style="text-decoration: overline;">${char}</span>`);
-            } else {
-                literals.push(m);
-            }
-        });
-        html += `<li style="margin-bottom: 0.25rem;"><strong>Cổng AND thứ ${idx + 1}</strong>: Nhận các tín hiệu đầu vào ${literals.join(', ')} để tạo ra cụm tích ${latexToHTML(term)}.</li>`;
-    });
-    
-    html += `</ul></li>`;
-    html += `<li style="margin-bottom: 0.25rem;">Gom đầu ra của các cổng AND chui vào 1 cổng OR khổng lồ (hình cái khiên) để xuất ra hàm <span style="font-weight: bold; color: var(--accent-green);">${latexToHTML('f = ' + coverLaTex.join(' \\lor '))}</span>.</li>`;
-    html += `</ul></li>`;
-    html += `<li style="margin-bottom: 0.5rem; text-align: center;"><strong>Sơ đồ mạch logic f:</strong><br>${circuitSVG}</li>`;
-    html += `</ul>`;
+    html += `<div style="text-align: center; margin: 1rem 0;">${circuitSVG}</div>`;
     return html;
 }
 
@@ -364,17 +319,16 @@ function generateUitExamAnswer(activeMinterms, inactiveMinterms, primeImplicants
     ${pdnfStr}
 
 **b) Tìm các công thức đa thức tối tiểu của hàm $f$:**
-*   **Biểu đồ Karnaugh:** *(Kẻ đúng khung này, tuyệt đối không được đổi chỗ các chữ cái ở 4 mép)*
+*   **Biểu đồ Karnaugh:**
 
 ${kMapMarkdown}
-
-*(Cách làm nháp: Điền số 1 vào các ô tương ứng. Gom nhóm và đọc tên tế bào lớn)*.
 
 *   **Xác định các tế bào lớn:** ${piString}.
 *   **Tế bào lớn thiết yếu:** ${epiString}.
 *   **Họ phủ tối tiểu:** Chọn các tế bào đè kín số 1: ${coverString}.
 *   **Các công thức đa thức tối tiểu của $f$ là:**
-    ${sopString}.${generateCircuitDescription(coverLaTex, circuitSVG)}`;
+    ${sopString}.
+${generateCircuitDescription(coverLaTex, circuitSVG)}`;
 
     document.getElementById('uit-raw-text').value = markdown;
 
@@ -395,7 +349,7 @@ ${kMapMarkdown}
             
             <p><strong>b) Tìm các công thức đa thức tối tiểu của hàm f:</strong></p>
             <ul style="padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">
-                <li style="margin-bottom: 0.75rem;"><strong>Biểu đồ Karnaugh:</strong> <em style="font-size: 0.9rem; color: var(--muted);">(Kẻ đúng khung này, tuyệt đối không được đổi chỗ các chữ cái ở 4 mép)</em>
+                <li style="margin-bottom: 0.75rem;"><strong>Biểu đồ Karnaugh:</strong>
                     <div style="overflow-x: auto;">
                         ${generateKarnaughMapHTML(activeMintermsSet)}
                     </div>
