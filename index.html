@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="#0a0e1a">
+    <link rel="manifest" href="manifest.json">
+    <title>CTRD Solver — UIT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <svg style="display: none;">
+        <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0891b2" />
+                <stop offset="100%" stop-color="#7c3aed" />
+            </linearGradient>
+        </defs>
+    </svg>
+</head>
+<body>
+
+<header>
+    <span class="logo">
+        <svg viewBox="0 0 24 24"><path d="m3 21 18-18v18z"/></svg>
+        CTRD — UIT
+    </span>
+    <span class="badge">OFFLINE</span>
+</header>
+
+<div class="desktop-tabs">
+    <button class="dt-btn active" onclick="switchTab('boolean-tab')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+        Câu 1
+    </button>
+    <button class="dt-btn" onclick="switchTab('graph-q2')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M18 3a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM6 15a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM18 15a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM9 18h6M16.24 7.76l-7.48 9.48M18 9v6"></svg>
+        Câu 2
+    </button>
+    <button class="dt-btn" onclick="switchTab('graph-q3')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M4 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM20 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM20 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM4 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 7h12M6 17h12M12 5v14" /></svg>
+        Câu 3
+    </button>
+    <button class="dt-btn" onclick="switchTab('export-tab')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+        Bài làm
+    </button>
+</div>
+
+<!-- ═══ CÂU 1 ═══ -->
+<div id="boolean-tab" class="page active">
+    <div class="page-panel">
+        <div class="card">
+            <div class="card-label">Câu 1 · Boole</div>
+            <div class="grid2" style="margin-bottom:10px">
+                <button class="btn btn-cyan btn-sm" onclick="loadPresetExam(1)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    Đề 1
+                </button>
+                <button class="btn btn-purple btn-sm" onclick="loadPresetExam(2)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    Đề 2
+                </button>
+            </div>
+            <select id="bool-vars" onchange="initMintermSelectors()" style="margin-bottom:8px">
+                <option value="4" selected>4 biến (x, y, z, t)</option>
+                <option value="3">3 biến (x, y, z)</option>
+                <option value="5">5 biến (a, b, c, d, e)</option>
+            </select>
+            <select id="input-mode" onchange="toggleInputMode()" style="margin-bottom:8px">
+                <option value="exam">Nhập f⁻¹(0)</option>
+                <option value="interactive">Chọn minterm</option>
+            </select>
+            <div id="exam-string-input">
+                <textarea id="f0-input" rows="3" placeholder="Ví dụ: 1110, 1011, 0011">1110, 1011, 0011, 0101, 0001, 0100</textarea>
+            </div>
+            <div id="interactive-checkboxes" style="display:none; margin-top:6px">
+                <div class="minterm-grid" id="minterms-wrapper"></div>
+            </div>
+            <button class="btn btn-primary btn-full" style="margin-top:10px" onclick="solveBoolean()">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Tối thiểu hóa
+            </button>
+        </div>
+    </div>
+    <div class="page-main">
+        <div class="card">
+            <div class="out-label">PDNF</div>
+            <div id="pdnf-output" class="out" style="min-height:46px"></div>
+            <div class="out-label" style="margin-top:10px">Đa thức tối thiểu</div>
+            <div id="sop-output" class="out" style="min-height:46px"></div>
+        </div>
+        <div id="uit-exam-card" class="result-card">
+            <div class="result-header">
+                <span class="result-title">📄 Bài làm Câu 1</span>
+                <div id="option-selector-container"></div>
+            </div>
+            <div id="uit-preview-content" class="preview-box"></div>
+            <div class="raw-box">
+                <div class="out-label">Mã nguồn Markdown</div>
+                <textarea id="uit-raw-text" readonly></textarea>
+                <button class="btn btn-primary btn-full btn-sm" onclick="copyToClipboard('uit-raw-text', this)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Sao chép Markdown
+                </button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-label">Sơ đồ mạch logic</div>
+            <div class="svg-wrap" id="circuit-svg-container"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ CÂU 2 & 3 ═══ -->
+<div id="graph-tab" class="page">
+    <div class="page-panel">
+        <!-- Card Thiết lập Đồ thị Chung -->
+        <div class="card" id="graph-setup-card">
+            <div class="card-label">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                Thiết lập Đồ thị
+            </div>
+            <div class="grid2" style="margin-bottom:10px">
+                <button class="btn btn-cyan btn-sm" onclick="loadGraphPreset(1)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    Đề 1 (D)
+                </button>
+                <button class="btn btn-purple btn-sm" onclick="loadGraphPreset(2)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    Đề 2 (E)
+                </button>
+            </div>
+            <select id="graph-type" onchange="changeGraphType()" style="margin-bottom:8px">
+                <option value="undirected">Vô hướng</option>
+                <option value="directed">Có hướng</option>
+            </select>
+            <div class="graph-ctrl" style="margin-bottom:8px">
+                <button class="btn" id="btn-mode-vertex" onclick="setGraphMode('vertex')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    Đỉnh
+                </button>
+                <button class="btn" id="btn-mode-edge" onclick="setGraphMode('edge')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    Cạnh
+                </button>
+                <button class="btn" id="btn-mode-delete" onclick="setGraphMode('delete')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    Xóa
+                </button>
+                <button class="btn" onclick="clearGraph()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Xóa tất
+                </button>
+            </div>
+            <textarea id="graph-text-input" rows="3" placeholder="A-B: 4, A-C: 2, ..."></textarea>
+            <div class="row" style="margin-top:6px">
+                <button class="btn btn-cyan btn-sm" onclick="parseGraphFromText()">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                    Nạp
+                </button>
+                <button class="btn btn-purple btn-sm" onclick="loadGraphPresetText()">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Mẫu
+                </button>
+            </div>
+        </div>
+
+        <!-- Card Câu 2: Euler / Hamilton & Auto-design -->
+        <div class="card" id="q2-card">
+            <div class="card-label">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM6 15a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM18 15a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM9 18h6M16.24 7.76l-7.48 9.48M18 9v6"></svg>
+                Câu 2 · Vẽ Đồ Thị
+            </div>
+            
+            
+            <div class="cfg-label" style="margin-top:6px; font-weight: 700; color: var(--purple);">Tự sinh Câu 2 (Vô hướng a)</div>
+            <div class="grid2" style="margin-top:4px; margin-bottom:8px">
+                <select id="q2a-vertices"><option value="5">5 đỉnh</option><option value="6">6 đỉnh</option><option value="7">7 đỉnh</option></select>
+                <select id="q2a-complete"><option value="false">Không đầy đủ</option><option value="true">Đầy đủ</option></select>
+                <select id="q2a-euler"><option value="true">Có Euler</option><option value="false">Không Euler</option></select>
+                <select id="q2a-hamilton"><option value="true">Có Hamilton</option><option value="false">Không Hamilton</option></select>
+            </div>
+            
+            <div class="cfg-label" style="font-weight: 700; color: var(--purple);">Tự sinh Câu 2 (Có hướng b)</div>
+            <div class="grid2" style="margin-top:4px; margin-bottom:8px">
+                <select id="q2b-vertices"><option value="5">5 đỉnh</option><option value="6" selected>6 đỉnh</option><option value="7">7 đỉnh</option></select>
+                <select id="q2b-connectivity"><option value="weak">Liên thông yếu</option><option value="strong">Liên thông mạnh</option></select>
+                <select id="q2b-tournament" style="grid-column:span 2"><option value="true">Tournament</option><option value="false">Không Tournament</option></select>
+            </div>
+            
+            <div class="grid2" style="margin-bottom:8px">
+                <button class="btn btn-cyan btn-sm" onclick="loadPresetQ2(1)">⚡ Đề 1</button>
+                <button class="btn btn-purple btn-sm" onclick="loadPresetQ2(2)">⚡ Đề 2</button>
+            </div>
+            
+            <button class="btn btn-primary btn-full" onclick="runQ2AutoAlgorithm()">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Sinh bài làm Câu 2 tự động
+            </button>
+        </div>
+
+        <!-- Card Câu 3: Algorithms -->
+        <div class="card" id="q3-card">
+            <div class="card-label">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM20 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM20 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM4 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 7h12M6 17h12M12 5v14" /></svg>
+                Câu 3 · Bài toán Đồ thị
+            </div>
+            
+            <div class="cfg-label" style="font-weight: 700; color: var(--cyan);">Đỉnh gốc Dijkstra (Câu c)</div>
+            <select id="start-node-select" style="margin-bottom:8px"></select>
+            
+            <div class="cfg-label" style="font-weight: 700; color: var(--cyan);">Loại cây khung Kruskal (Câu d)</div>
+            <select id="kruskal-type-select" style="margin-bottom:12px">
+                <option value="max" selected>Kruskal — Cây khung LỚN NHẤT</option>
+                <option value="min">Kruskal — Cây khung nhỏ nhất</option>
+            </select>
+            
+            <button class="btn btn-primary btn-full" onclick="runQ3Algorithm()">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Sinh bài làm Câu 3
+            </button>
+        </div>
+    </div>
+    <div class="page-main">
+        <div class="canvas-wrap" id="canvas-area-wrapper">
+            <canvas id="graphCanvas" height="420"></canvas>
+        </div>
+        <div class="card" id="graph-log-card">
+            <div class="out-label">Nhật ký hoạt động</div>
+            <div id="graph-output" class="out" style="height:120px"></div>
+        </div>
+        
+        <!-- Bài làm Câu 2 -->
+        <div id="uit-q2-exam-card" class="result-card">
+            <div class="result-header">
+                <span class="result-title">📄 Bài làm Câu 2 (Vẽ đồ thị)</span>
+            </div>
+            <div id="uit-q2-preview-content" class="preview-box"></div>
+            <div class="raw-box">
+                <div class="out-label">Mã nguồn Markdown</div>
+                <textarea id="uit-q2-raw-text" readonly></textarea>
+                <button class="btn btn-primary btn-full btn-sm" onclick="copyToClipboard('uit-q2-raw-text', this)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Sao chép Markdown Câu 2
+                </button>
+            </div>
+        </div>
+        
+        <!-- Bài làm Câu 3 -->
+        <div id="uit-q3-exam-card" class="result-card">
+            <div class="result-header">
+                <span class="result-title">📄 Bài làm Câu 3 (Bài toán Đồ thị tổng hợp)</span>
+            </div>
+            <div id="uit-q3-preview-content" class="preview-box"></div>
+            <div class="raw-box">
+                <div class="out-label">Mã nguồn Markdown</div>
+                <textarea id="uit-q3-raw-text" readonly></textarea>
+                <button class="btn btn-primary btn-full btn-sm" onclick="copyToClipboard('uit-q3-raw-text', this)">
+                    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Sao chép Markdown Câu 3
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ TỔNG HỢP ═══ -->
+<div id="export-tab" class="page">
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span style="font-size:.85rem;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:5px">
+            <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Tổng hợp bài làm 3 câu
+        </span>
+        <div class="row" style="gap:6px;flex:0">
+            <button class="btn btn-purple btn-sm" onclick="copyFullMarkdownAnswer()">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Sao chép Markdown
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">
+                <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                In bài làm / Xuất PDF
+            </button>
+        </div>
+    </div>
+    <div class="print-sheet-wrapper" id="full-answer-sheet">
+        <div style="text-align:center;margin-bottom:1.75rem;border-bottom:2px double #cbd5e1;padding-bottom:1.1rem">
+            <h2 style="font-size:1.1rem;color:#0f172a;font-weight:bold;font-family:inherit">BÀI LÀM — CẤU TRÚC RỜI RẠC</h2>
+            <p style="font-size:.82rem;color:#64748b;margin-top:.2rem">Trường Đại học Công nghệ Thông tin — ĐHQG-HCM</p>
+        </div>
+        <div style="margin-bottom:2.25rem">
+            <h3 style="font-size:.95rem;color:#0f172a;font-weight:bold;border-bottom:1px solid #e2e8f0;padding-bottom:.2rem;margin-bottom:.6rem">BÀI 1: TỐI THIỂU HÓA HÀM BOOLE</h3>
+            <div id="export-q1-content" style="color:#64748b;font-style:italic;font-size:.82rem">(Chưa chạy Câu 1)</div>
+        </div>
+        <div style="margin-bottom:2.25rem">
+            <h3 style="font-size:.95rem;color:#0f172a;font-weight:bold;border-bottom:1px solid #e2e8f0;padding-bottom:.2rem;margin-bottom:.6rem">BÀI 2: PHÁC HỌA ĐỒ THỊ</h3>
+            <div id="export-q2-content" style="color:#64748b;font-style:italic;font-size:.82rem">(Chưa chạy Câu 2)</div>
+        </div>
+        <div style="margin-bottom:2.25rem">
+            <h3 style="font-size:.95rem;color:#0f172a;font-weight:bold;border-bottom:1px solid #e2e8f0;padding-bottom:.2rem;margin-bottom:.6rem">BÀI 3: THUẬT TOÁN ĐỒ THỊ TỔNG HỢP</h3>
+            <div id="export-q3-content" style="color:#64748b;font-style:italic;font-size:.82rem">(Chưa chạy Câu 3)</div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Nav (mobile) -->
+<nav class="nav">
+    <button class="nav-btn active" id="tab-btn-boolean" onclick="switchTab('boolean-tab')">
+        <span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg></span>
+        Câu 1
+    </button>
+    <button class="nav-btn" id="tab-btn-q2" onclick="switchTab('graph-q2')">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M18 3a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM6 15a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM18 15a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3zM9 18h6M16.24 7.76l-7.48 9.48M18 9v6"/></svg></span>
+        Câu 2
+    </button>
+    <button class="nav-btn" id="tab-btn-q3" onclick="switchTab('graph-q3')">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM20 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM20 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM4 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 7h12M6 17h12M12 5v14"/></svg></span>
+        Câu 3
+    </button>
+    <button class="nav-btn" id="tab-btn-export" onclick="switchTab('export-tab')">
+        <span class="icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></span>
+        Bài làm
+    </button>
+</nav>
+
+
+<script src="js/main.js"></script>
+<script src="js/boolean.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/q2.js"></script>
+<script src="js/q3.js"></script>
+</body>
+</html>
