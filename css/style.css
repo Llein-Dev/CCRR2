@@ -283,7 +283,7 @@
 
         /* MINTERM GRID */
         .minterm-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(78px,1fr));
+            display: grid; grid-template-columns: repeat(2, 1fr);
             gap: 5px; max-height: 175px; overflow-y: auto;
             padding: 7px; background: #f1f5f9;
             border: 1px solid var(--border); border-radius: var(--radius-sm);
