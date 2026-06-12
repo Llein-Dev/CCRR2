@@ -682,3 +682,6 @@ function renderLogicCircuit(sopFormula, varLabels) {
     svg += `</svg>`;
     container.innerHTML = svg;
 }
+
+// Khởi tạo các minterm ngay khi nạp file JS
+initMintermSelectors();
