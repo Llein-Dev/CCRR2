@@ -8,10 +8,10 @@ function initMintermSelectors() {
     for(let i = 0; i < total; i++) {
         const bin = i.toString(2).padStart(varsCount, '0');
         wrapper.innerHTML += `
-            <div class="minterm-item">
+            <label class="minterm-item" for="mt-${bin}">
                 <input type="checkbox" id="mt-${bin}" value="${bin}">
-                <label for="mt-${bin}">${bin} (${i})</label>
-            </div>
+                <span>${bin} <span class="dec-val">(${i})</span></span>
+            </label>
         `;
     }
 }
