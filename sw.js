@@ -1,4 +1,4 @@
-const CACHE_NAME = 'uit-discrete-math-v14';
+const CACHE_NAME = 'uit-discrete-math-v15';
 const ASSETS = [
   './',
   './index.html',

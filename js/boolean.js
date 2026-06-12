@@ -232,9 +232,8 @@ function generateKarnaughMapHTML(activeMintermsSet) {
     return html;
 }
 
-function generateCircuitDescription(coverLaTex) {
+function generateCircuitDescription(coverLaTex, circuitSVG) {
     let descMarkdown = `\n\n**c) Vẽ sơ đồ mạch logic:**\n`;
-    descMarkdown += `*   **Sơ đồ mạch:** *(Học sinh tự vẽ sơ đồ mạch logic dựa trên biểu thức tối tiểu ở câu b)*\n`;
     descMarkdown += `*   **Mô tả chi tiết cách vẽ:**\n`;
     descMarkdown += `    - Kéo 4 đường tín hiệu thẳng đứng đại diện cho các biến $x, y, z, t$. Sử dụng thêm các cổng NOT để tạo các nhánh $\\overline{x}, \\overline{y}, \\overline{z}, \\overline{t}$ (nếu có).\n`;
     descMarkdown += `    - Dùng các cổng AND (hình chữ D) để gom các cụm tích hội (nhân logic) của các từ tối tiểu:\n`;
@@ -253,14 +252,14 @@ function generateCircuitDescription(coverLaTex) {
         descMarkdown += `      + **Cổng AND thứ ${idx + 1}**: Gom các đầu vào ${literals.join(', ')} để xuất ra cụm $${term}$.\n`;
     });
     
-    descMarkdown += `    - Gom đầu ra của các cổng AND trên vào ngõ vào của 1 cổng OR lớn (hình cái khiên) để xuất ra hàm $f = ${coverLaTex.join(' \\lor ')}$.`;
+    descMarkdown += `    - Gom đầu ra của các cổng AND trên vào ngõ vào của 1 cổng OR lớn (hình cái khiên) để xuất ra hàm $f = ${coverLaTex.join(' \\lor ')}$.\n`;
+    descMarkdown += `*   **Sơ đồ mạch logic f:**\n\n${circuitSVG}`;
     return descMarkdown;
 }
 
-function generateCircuitDescriptionHTML(coverLaTex) {
+function generateCircuitDescriptionHTML(coverLaTex, circuitSVG) {
     let html = `<p style="margin-top: 1rem; margin-bottom: 0.5rem;"><strong>c) Vẽ sơ đồ mạch logic:</strong></p>`;
     html += `<ul style="padding-left: 1.5rem; margin-bottom: 1rem;">`;
-    html += `<li style="margin-bottom: 0.5rem;"><strong>Sơ đồ mạch:</strong> <span style="color: var(--muted); font-size: 0.9rem;">(Học sinh tự vẽ sơ đồ mạch logic dựa trên biểu thức tối tiểu ở câu b)</span></li>`;
     html += `<li style="margin-bottom: 0.5rem;"><strong>Mô tả chi tiết cách vẽ:</strong>`;
     html += `<ul style="padding-left: 1.5rem; margin-top: 0.25rem;">`;
     html += `<li style="margin-bottom: 0.25rem;">Kéo 4 đường tín hiệu thẳng đứng đại diện cho các biến <span style="font-style: italic;">x, y, z, t</span>. Dùng cổng NOT (tam giác có vòng tròn) tạo các nhánh <span style="text-decoration: overline;">x</span>, <span style="text-decoration: overline;">y</span>, <span style="text-decoration: overline;">z</span>, <span style="text-decoration: overline;">t</span>.</li>`;
@@ -283,7 +282,9 @@ function generateCircuitDescriptionHTML(coverLaTex) {
     
     html += `</ul></li>`;
     html += `<li style="margin-bottom: 0.25rem;">Gom đầu ra của các cổng AND chui vào 1 cổng OR khổng lồ (hình cái khiên) để xuất ra hàm <span style="font-weight: bold; color: var(--accent-green);">${latexToHTML('f = ' + coverLaTex.join(' \\lor '))}</span>.</li>`;
-    html += `</ul></li></ul>`;
+    html += `</ul></li>`;
+    html += `<li style="margin-bottom: 0.5rem; text-align: center;"><strong>Sơ đồ mạch logic f:</strong><br>${circuitSVG}</li>`;
+    html += `</ul>`;
     return html;
 }
 
@@ -294,6 +295,7 @@ function generateUitExamAnswer(activeMinterms, inactiveMinterms, primeImplicants
     let selectedCover = minimalSOPs[selectedOptionIndex];
     let activeMintermsSet = new Set(activeMinterms);
     let varLabels = ['x', 'y', 'z', 't'];
+    let circuitSVG = renderLogicCircuit(selectedCover.text, varLabels);
 
     // Option selector buttons
     const selectorContainer = document.getElementById('option-selector-container');
@@ -372,7 +374,7 @@ ${kMapMarkdown}
 *   **Tế bào lớn thiết yếu:** ${epiString}.
 *   **Họ phủ tối tiểu:** Chọn các tế bào đè kín số 1: ${coverString}.
 *   **Các công thức đa thức tối tiểu của $f$ là:**
-    ${sopString}.${generateCircuitDescription(coverLaTex)}`;
+    ${sopString}.${generateCircuitDescription(coverLaTex, circuitSVG)}`;
 
     document.getElementById('uit-raw-text').value = markdown;
 
@@ -407,7 +409,7 @@ ${kMapMarkdown}
                     </div>
                 </li>
             </ul>
-            ${generateCircuitDescriptionHTML(coverLaTex)}
+            ${generateCircuitDescriptionHTML(coverLaTex, circuitSVG)}
         </div>
     `;
     
@@ -603,9 +605,8 @@ function runPetrickMethod(primes, minterms, varLabels) {
 }
 
 function renderLogicCircuit(sopFormula, varLabels) {
-    if(!sopFormula) return;
+    if(!sopFormula) return "";
     const container = document.getElementById('circuit-svg-container');
-    if (!container) return;
     
     let subProducts = sopFormula.split(' + ');
     let svgWidth = 600;
@@ -680,7 +681,10 @@ function renderLogicCircuit(sopFormula, varLabels) {
     }
 
     svg += `</svg>`;
-    container.innerHTML = svg;
+    if (container) {
+        container.innerHTML = svg;
+    }
+    return svg;
 }
 
 // Khởi tạo các minterm ngay khi nạp file JS
